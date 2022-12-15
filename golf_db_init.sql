@@ -5,7 +5,7 @@ USE golf;
 DROP USER IF EXISTS 'sam1'@'localhost';
 
 -- create sam1 and granting privileges to the golf database 
-CREATE USER 'sam1'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Rahg5643!';
+CREATE USER 'sam1'@'localhost' IDENTIFIED WITH mysql_native_password BY '***********!';
 
 -- grant all privileges to the `golf` database to user sam1 on localhost 
 GRANT ALL PRIVILEGES ON `golf`.* TO 'sam1'@'localhost';
