@@ -2,8 +2,8 @@ import mysql.connector
 from mysql.connector import errorcode
 
 config = {
-    "user": "*********",
-    "password": "*********",
+    "user": "________",
+    "password": "________",
     "host": "127.0.0.1",
     "database": "golf",
     "raise_on_warnings": True
@@ -31,6 +31,7 @@ def show_golf_stats(cursor, title):
     cursor.execute("""select DISTINCT courses.course_name "Course", scores.holes_played "Holes Played per Round", count(scores.score_id) "Count of Rounds Played"
 						from scores 
 						left join courses on scores.course_id = courses.course_id 
+						where golfer_id = 1
 						group by courses.course_name, scores.holes_played
 						order by courses.course_name ASC, scores.holes_played ASC; """)
 

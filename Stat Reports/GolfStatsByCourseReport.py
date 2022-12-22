@@ -2,8 +2,8 @@ import mysql.connector
 from mysql.connector import errorcode
 
 config = {
-    "user": "*********",
-    "password": "*********",
+    "user": "________",
+    "password": "________",
     "host": "127.0.0.1",
     "database": "golf",
     "raise_on_warnings": True
