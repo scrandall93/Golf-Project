@@ -2,8 +2,8 @@ import mysql.connector
 from mysql.connector import errorcode
 
 config = {
-    "user": "**********",
-    "password": "**********",
+    "user": "________",
+    "password": "________",
     "host": "127.0.0.1",
     "database": "golf",
     "raise_on_warnings": True
@@ -52,18 +52,28 @@ try:
             print("Club Model Name: ", club[2])
             print("  ")
 
+    def show_course_ratings():
+        query = "SELECT rating_id, course_id, rating_year, course_slope_rating, course_rating from courseRatings"
+        cursor.execute(query)
+        courseRatings = cursor.fetchall()
+        for course in courseRatings:
+            print("Rating ID: ", course[0])
+            print("Course ID: ", course[1])
+            print("Rating Year: ", course[2])
+            print("Course Slope Rating: ", course[3])
+            print("Course Overall Rating: ", course[4])
+            print("  ")
+
     def show_courses():
-        query = "SELECT course_id, course_name, course_ranking, course_front_par, course_back_par from courses"
+        query = "SELECT course_id, course_name, course_front_par, course_back_par from courses"
         cursor.execute(query)
         courses = cursor.fetchall()
         for course in courses:
             print("Course ID: ", course[0])
             print("Course Name: ", course[1])
-            print("Course Ranking: ", course[2])
-            print("Course Front Par: ", course[3])
-            print("Course Back Par: ", course[4])
+            print("Course Front Par: ", course[2])
+            print("Course Back Par: ", course[3])
             print("  ")
-
 
     # CLUBS INSERT
     clubs_insert_statement = (
@@ -87,16 +97,30 @@ try:
 
     # COURSES INSERT
     courses_insert_statement = (
-        "INSERT INTO courses(course_id, course_name, course_ranking, course_front_par, course_back_par)" "VALUES (%s, %s, %s, %s, %s)")
+        "INSERT INTO courses(course_id, course_name, course_front_par, course_back_par)" "VALUES (%s, %s, %s, %s)")
     courses_list = [
-        ('1', 'Trussville Country Club', '67', '36', '36'),
-        ('2', 'Woodward Country Club', '70', '36', '35'),
-        ('3', 'Roebuck Municipal Golf Course', '68', '37', '34'),
-        ('4', 'Frankhouse Golf Course', '67', '36', '36'),
-        ('5', 'Ballantrae Golf Course', '74', '36', '36'),
-        ('6', 'Bent Brook Golf Course; Windmill', '74', '35', '36')
+        ('1', 'Trussville Country Club', '36', '36'),
+        ('2', 'Woodward Country Club', '36', '35'),
+        ('3', 'Roebuck Municipal Golf Course', '37', '34'),
+        ('4', 'Frankhouse Golf Course', '36', '36'),
+        ('5', 'Ballantrae Golf Course', '36', '36'),
+        ('6', 'Bent Brook Golf Course; Brook to Graveyard', '36', '36')
     ]
     cursor.executemany(courses_insert_statement, courses_list)
+    db.commit()
+    
+    # COURSE RATINGS INSERT
+    courseRatings_insert_statement = (
+        "INSERT INTO courseRatings(rating_id, course_id, rating_year, course_slope_rating, course_rating)" "VALUES (%s, %s, %s, %s, %s)")
+    courseRatings_list = [
+        ('1', '1', '2022', '116', '67.9'),
+        ('2', '2', '2022', '124', '69.4'),
+        ('3', '3', '2022', '117', '69.1'),
+        ('4', '4', '2022', '113', '68.6'),
+        ('5', '5', '2022', '125', '72'),
+        ('6', '6', '2022', '132', '74.3')
+    ]
+    cursor.executemany(courseRatings_insert_statement, courseRatings_list)
     db.commit()
 
 	# SCORES INSERT
@@ -165,6 +189,8 @@ try:
     show_clubs()
     print("-- Scores --\n")
     show_scores()
+    print("-- Course Ratings --\n")
+    show_course_ratings()
 
 except mysql.connector.Error as err:
     if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:

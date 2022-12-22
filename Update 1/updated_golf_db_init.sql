@@ -5,7 +5,7 @@ USE golf;
 DROP USER IF EXISTS 'sam1'@'localhost';
 
 -- create sam1 and granting privileges to the golf database 
-CREATE USER 'sam1'@'localhost' IDENTIFIED WITH mysql_native_password BY '***********!';
+CREATE USER 'sam1'@'localhost' IDENTIFIED WITH mysql_native_password BY '________';
 
 -- grant all privileges to the `golf` database to user sam1 on localhost 
 GRANT ALL PRIVILEGES ON `golf`.* TO 'sam1'@'localhost';
@@ -15,6 +15,7 @@ DROP TABLE IF EXISTS Golfers;
 DROP TABLE IF EXISTS Courses;
 DROP TABLE IF EXISTS Clubs;
 DROP TABLE IF EXISTS Scores;
+DROP TABLE IF EXISTS CourseRatings;
 
 -- create tables
 CREATE TABLE `Golfers` (
@@ -46,10 +47,18 @@ CREATE TABLE `Clubs` (
 CREATE TABLE `Courses` (
 	`course_id` INT NOT NULL,
 	`course_name` VARCHAR(75) NOT NULL,
-	`course_ranking` INT NOT NULL,
 	`course_front_par` INT NOT NULL,
 	`course_back_par` INT NOT NULL,
 	PRIMARY KEY (`course_id`)
+);
+
+CREATE TABLE `CourseRatings` (
+	`rating_id` INT NOT NULL,
+	`course_id` INT NOT NULL,
+	`rating_year` INT NOT NULL,
+	`course_slope_rating` INT NOT NULL,
+	`course_rating` INT NOT NULL,
+	PRIMARY KEY (`rating_id`)
 );
 
 -- assign foreign keys
@@ -65,3 +74,7 @@ FOREIGN KEY (golfer_id) REFERENCES Golfers(golfer_id);
 ALTER TABLE Golfers
 ADD CONSTRAINT FK_club_id
 FOREIGN KEY (club_id) REFERENCES Clubs(club_id);
+
+ALTER TABLE CourseRatings
+ADD CONSTRAINT FK_course_id1
+FOREIGN KEY (course_id) REFERENCES Courses(course_id);
