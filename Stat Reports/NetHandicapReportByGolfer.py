@@ -2,8 +2,8 @@ import mysql.connector
 from mysql.connector import errorcode
 
 config = {
-    "user": "_______",
-    "password": "_______",
+    "user": "________",
+    "password": "________",
     "host": "127.0.0.1",
     "database": "golf",
     "raise_on_warnings": True
@@ -26,10 +26,9 @@ except mysql.connector.Error as err:
 
 cursor = db.cursor()
     
-def show_golfer_handicaps(cursor, title):	
+def show_golf_stats(cursor, title):	
 	
-    cursor.execute("""
-    /* CTE to find handicap differentials by course */
+    cursor.execute("""/* CTE to find handicap differentials by course */
 with initialCalc (GolferName, CourseName, Countof18Rounds, HandicapDifferential, CourseSlopeRating, CourseRating, Par) as
 (
 	Select golfers.golfer_name "Golfer", courses.course_name "Course", COUNT(scores.score_id) "Count of Rounds of 18", ((scores.score_total - courseRatings.course_rating) * 113 / courseRatings.course_slope_rating) "Handicap Differential", courseRatings.course_slope_rating "Course Slope Rating", courseRatings.course_rating "Course Rating", scores.score_par "Par"
@@ -58,15 +57,17 @@ courseHCCalc (GolferName, CourseName, CourseHandicap) as
 	group by 1, 2
 )
 
-select * 
-from courseHCCalc;  """)
+/* driver code to find a net average handicap based on an average of handicaps by course */
+select GolferName "Golfer Name", ROUND(AVG(CourseHandicap), 2) "Net Average of Handicap"
+from courseHCCalc
+group by GolferName; """)
 
-    handicaps = cursor.fetchall()
+    courses = cursor.fetchall()
     
     print("\n -- {} --".format(title))
 
-    for handicap in handicaps:
-        print("Golfer: {}\nCourse: {}\nHandicap: {}\n".format(handicap[0], handicap[1], handicap[2]))
-show_golfer_handicaps(cursor, "--Displaying Handicap Reports--")
+    for course in courses:
+        print("Golfer: {}\nNet Average Handicap: {}".format(course[0], course[1]))
+show_golf_stats(cursor, "--Displaying Course Stats--")
 
 db.close()
